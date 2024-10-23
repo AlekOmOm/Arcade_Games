@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Joystick, Gamepad2, Trophy, Volume2 } from 'lucide-react';
 import Snake from './games/Snake';
 
@@ -53,19 +53,23 @@ export default function Arcade() {
         {/* Game Selection */}
         <div className="mt-8 flex justify-center gap-4">
           <GameButton
-            active={currentGame === 'snake'}
-            onClick={() => setCurrentGame('snake')}
-            title="Snake"
+              active={currentGame === 'snake'}
+              onClick={() => setCurrentGame('snake')}
+              title="Snake"
+              disabled={false}
           />
           <GameButton
-            disabled
-            onClick={() => {}}
-            title="Space Invaders"
+              disabled
+              onClick={() => {}}
+              title="Space Invaders"
+              active={false}
           />
           <GameButton
-            disabled
-            onClick={() => {}}
-            title="Flappy Bird"
+              disabled
+              onClick={() => {
+              }}
+              title="Flappy Bird"
+              active={false}
           />
         </div>
       </div>
@@ -73,7 +77,12 @@ export default function Arcade() {
   );
 }
 
-function GameButton({ title, active, disabled, onClick }) {
+function GameButton({ title, active, disabled, onClick }: {
+  title: string;
+  active: boolean;
+  disabled: boolean;
+  onClick: () => void;
+}) {
   return (
     <button
       onClick={onClick}

@@ -1,8 +1,31 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 const GRID_SIZE = 20;
 const CELL_SIZE = 20;
 const INITIAL_SPEED = 150;
+
+type KeyMapType = {
+  [key: string]: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
+};
+
+type OppositeType = {
+  [key in 'UP' | 'DOWN' | 'LEFT' | 'RIGHT']: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
+};
+
+// Define mappings
+const KEY_MAP: KeyMapType = {
+  ArrowUp: 'UP',
+  ArrowDown: 'DOWN',
+  ArrowLeft: 'LEFT',
+  ArrowRight: 'RIGHT',
+};
+
+const OPPOSITES: OppositeType = {
+  UP: 'DOWN',
+  DOWN: 'UP',
+  LEFT: 'RIGHT',
+  RIGHT: 'LEFT',
+};
 
 export default function Snake() {
   const [snake, setSnake] = useState([{ x: 10, y: 10 }]);
@@ -11,7 +34,7 @@ export default function Snake() {
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const gameLoopRef = useRef(null);
+  const gameLoopRef = useRef<number | null>(null);
 
   const generateFood = useCallback(() => {
     const newFood = {
@@ -30,7 +53,7 @@ export default function Snake() {
     setIsPaused(false);
   };
 
-  const checkCollision = useCallback((head) => {
+  const checkCollision = useCallback((head: { x: number; y: number; }) => {
     // Wall collision
     if (
       head.x < 0 ||
@@ -91,8 +114,9 @@ export default function Snake() {
     });
   }, [direction, food, gameOver, isPaused, checkCollision, generateFood]);
 
+
   useEffect(() => {
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: { key: string; }) => {
       if (e.key === ' ') {
         setIsPaused((prev) => !prev);
         return;
@@ -103,23 +127,12 @@ export default function Snake() {
         return;
       }
 
-      const keyMap = {
-        ArrowUp: 'UP',
-        ArrowDown: 'DOWN',
-        ArrowLeft: 'LEFT',
-        ArrowRight: 'RIGHT',
-      };
 
-      if (keyMap[e.key]) {
-        const newDirection = keyMap[e.key];
-        const opposites = {
-          UP: 'DOWN',
-          DOWN: 'UP',
-          LEFT: 'RIGHT',
-          RIGHT: 'LEFT',
-        };
 
-        if (opposites[newDirection] !== direction) {
+      if (KEY_MAP[e.key]) {
+        const newDirection = KEY_MAP[e.key];
+
+        if (OPPOSITES[newDirection] !== direction) {
           setDirection(newDirection);
         }
       }
@@ -130,8 +143,12 @@ export default function Snake() {
   }, [direction, gameOver]);
 
   useEffect(() => {
-    gameLoopRef.current = setInterval(moveSnake, INITIAL_SPEED);
-    return () => clearInterval(gameLoopRef.current);
+    gameLoopRef.current = window.setInterval(moveSnake, INITIAL_SPEED);
+    return () => {
+      if(gameLoopRef.current) {
+        window.clearInterval(gameLoopRef.current);
+      }
+    };
   }, [moveSnake]);
 
   return (
