@@ -1,7 +1,11 @@
 # Arcade_Games
 
-
 *A nostalgic arcade cabinet design with neon gradients and retro styling.*
+
+#### Stack:
+build and run:
+- `npm install && npm run dev`
+
 
 #### Stack:
 - TypeScript
@@ -14,8 +18,7 @@
 - Flappy Bird (not ready)
 
 
-### Implemented
-#### A complete Snake game implementation with:
+#### Snake game implementation with:
 - Score tracking
 - Pause functionality (Space bar)
 - Game over state
